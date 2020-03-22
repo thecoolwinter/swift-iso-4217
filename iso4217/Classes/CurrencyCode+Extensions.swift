@@ -39,7 +39,17 @@ private extension CurrencyCode {
     var priceFormatter: NumberFormatter {
         return memoizedFormatters.memoize(self) {
             let formatter = NumberFormatter()
-            formatter.numberStyle = .currency
+            
+            /*
+             
+             This fixes a bug with USD where using the first locale in the list of locales that use USD comes up with the Equador Locale.
+             So instead of grabbing a random locale I just changed the formatter to use the rawValue of the current type.
+             I'm using this library in a budgeting app and this fixed the bugs I was having.
+             
+             */
+//            formatter.numberStyle = .currency
+            formatter.currencyCode = self.rawValue
+            
             formatter.locale = self.priceLocale
 
             return formatter
